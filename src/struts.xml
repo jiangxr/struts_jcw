@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <constant name="struts.devMode" value="true" />
+
+    <constant name="struts.enable.DynamicMethodInvocation" value="false"></constant>
+
+    <!--<constant name="struts.action.extension" value="" />-->
+
+    <package name="hello" namespace="/" extends="struts-default">
+
+        <!-- 注册拦截器 -->
+        <interceptors>
+            <interceptor name="mytimer" class="com.jcw.intercepter.TimerIntercepter"></interceptor>
+            <interceptor name="auth" class="com.jcw.intercepter.AuthIntercepter"></interceptor>
+            <interceptor-stack name="myStack">
+                <interceptor-ref name="mytimer"></interceptor-ref>
+                <interceptor-ref name="auth"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+
+        <!--<default-action-ref name="err" ></default-action-ref>-->
+
+        <!--<action name="err">-->
+            <!--<result>/error.jsp</result>-->
+        <!--</action>-->
+        <global-allowed-methods>add,update,login</global-allowed-methods>
+
+        <action name="helloworld_*" method="{1}"  class="com.jcw.action.HelloWorldAction">
+            <result name="success">/result.jsp</result>
+            <result name="add">/{1}.jsp</result>
+            <result name="update">/{1}.jsp</result>
+        </action>
+
+
+        <!--<action name="LoginAction" method="login" class="com.jcw.action.LoginAction">-->
+            <!--<result >/success.jsp</result>-->
+            <!--<result name="error">/login.jsp</result>-->
+        <!--</action>-->
+
+        <action name="timer" class="com.jcw.action.TimerAction">
+            <result>/success.jsp</result>
+            <interceptor-ref name="mytimer"></interceptor-ref>
+            <!-- 引用拦截器 -->
+        </action>
+
+        <action name="auth">
+            <result>/manager.jsp</result>
+            <result name="login">/login.jsp</result>
+            <interceptor-ref name="myStack"></interceptor-ref>
+        </action>
+
+        <action name="login" method="login" class="com.jcw.action.LoginAction">
+            <result>/manager.jsp</result>
+            <result name="error">/login.jsp</result>
+        </action>
+
+
+    </package>
+
+
+</struts>
